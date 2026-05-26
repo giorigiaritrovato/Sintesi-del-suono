@@ -13,7 +13,12 @@ let btnOsc, btnFilter, btnTarget, btnAudio;
 // --- ELEMENTI AUDIO REALI ---
 let realOsc, realNoise, realFilter;
 let audioStarted = false;
-let masterVolume = 0.20; 
+let masterVolume = 0.20;
+
+// --- INVILUPPO ADSR ---
+let envelopeStartTime = 0;
+let envelopeActive = false;
+let envelopePhase = 0; // 0-1: valore dell'inviluppo 
 
 // --- PALETTE COLORI (Stile Zinc Modern Dark) ---
 const COL_BG      = '#050505';   
@@ -111,13 +116,17 @@ function draw() {
 
   // --- MOTORE AUDIO IN TEMPO REALE ---
   if (audioStarted) {
+    // Calcolo inviluppo ADSR
+    let adsr = calculateADSREnvelope(atk, dec, sus, rel);
+    let adsr_volume = masterVolume * adsr;
+    
     // 1. Sorgente (VCO)
     if (oscType == 3) {
       realOsc.amp(0, 0.01); 
-      realNoise.amp(masterVolume, 0.01);
+      realNoise.amp(adsr_volume, 0.01);
     } else {
       realNoise.amp(0, 0.01); 
-      realOsc.amp(masterVolume, 0.01);
+      realOsc.amp(adsr_volume, 0.01);
       if (oscType == 0) realOsc.setType('sawtooth');
       if (oscType == 1) realOsc.setType('square');
       if (oscType == 2) realOsc.setType('triangle');
@@ -418,15 +427,44 @@ function makeSlider(mn, mx, val, step, x, y, w) {
 // ============================================================
 // INTERATTIVITÀ MOUSE & ACCENSIONE AUDIO
 // ============================================================
+function calculateADSREnvelope(attackMs, decayMs, sustainLvl, releaseMs) {
+  if (!envelopeActive) return 0;
+  
+  let elapsedTime = millis() - envelopeStartTime;
+  
+  // Fase Attack
+  if (elapsedTime < attackMs) {
+    return map(elapsedTime, 0, attackMs, 0, 1);
+  }
+  
+  elapsedTime -= attackMs;
+  
+  // Fase Decay
+  if (elapsedTime < decayMs) {
+    return map(elapsedTime, 0, decayMs, 1, sustainLvl);
+  }
+  
+  elapsedTime -= decayMs;
+  
+  // Fase Sustain (rimane a sustainLvl finché il gate è attivo)
+  return sustainLvl;
+}
+
+// ============================================================
+// INTERATTIVITÀ MOUSE & ACCENSIONE AUDIO
+// ============================================================
 function toggleAudioHardware() {
   if (!audioStarted) {
     userStartAudio(); 
     realOsc.start(); realNoise.start();
     audioStarted = true;
+    envelopeActive = true;
+    envelopeStartTime = millis();
     btnAudio.html('FERMA AUDIO MASTER').removeClass('active-stopped').addClass('active-playing');
   } else {
     realOsc.stop(); realNoise.stop();
     audioStarted = false;
+    envelopeActive = false;
     btnAudio.html('ACCENDI MASTER AUDIO').removeClass('active-playing').addClass('active-stopped');
   }
 }
