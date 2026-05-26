@@ -44,7 +44,7 @@ function setup() {
       color: #ffffff !important;
       border: 1px solid #27272a !important;
       border-radius: 6px !important;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+      font-family: "Neue Haas Unica", sans-serif !important;
       font-size: 12px !important;
       font-weight: 500 !important;
       cursor: pointer;
@@ -65,7 +65,7 @@ function setup() {
       color: #ffffff !important;
       border: 1px solid #27272a !important;
       border-radius: 6px !important;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+      font-family: "Neue Haas Unica", sans-serif !important;
       font-size: 12px !important;
       padding: 2px 6px !important;
       outline: none;
@@ -76,7 +76,7 @@ function setup() {
     }
   `);
 
-  textFont('-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif');
+  textFont('"Neue Haas Unica", sans-serif');
 
   // --- Audio Setup ---
   oscillator = new p5.Oscillator('sawtooth');

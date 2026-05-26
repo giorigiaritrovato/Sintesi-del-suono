@@ -57,10 +57,10 @@ function setup() {
   createElement('style', `
     .slider-custom { -webkit-appearance: none; background: #27272a !important; height: 6px !important; border-radius: 3px !important; outline: none; }
     .slider-custom::-webkit-slider-thumb { -webkit-appearance: none; background: #ffffff !important; width: 14px !important; height: 14px !important; border-radius: 50% !important; cursor: pointer; border: 1px solid #3f3f46 !important; }
-    .btn-custom { background: #18181b !important; color: #ffffff !important; border: 1px solid #27272a !important; border-radius: 6px !important; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important; font-size: 12px !important; font-weight: 500 !important; cursor: pointer; transition: all 0.2s ease !important; }
+    .btn-custom { background: #18181b !important; color: #ffffff !important; border: 1px solid #27272a !important; border-radius: 6px !important; font-family: "Neue Haas Unica", sans-serif !important; font-size: 12px !important; font-weight: 500 !important; cursor: pointer; transition: all 0.2s ease !important; }
     .btn-custom:hover { background: #27272a !important; border-color: #3f3f46 !important; }
     .btn-custom.active-playing { background: #10b98122 !important; color: #4ade80 !important; border-color: #047857 !important; font-weight: bold !important; }
-    .select-custom { background: #18181b !important; color: #ffffff !important; border: 1px solid #27272a !important; border-radius: 6px !important; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important; font-size: 12px !important; padding: 2px 6px !important; outline: none; cursor: pointer; }
+    .select-custom { background: #18181b !important; color: #ffffff !important; border: 1px solid #27272a !important; border-radius: 6px !important; font-family: "Neue Haas Unica", sans-serif !important; font-size: 12px !important; padding: 2px 6px !important; outline: none; cursor: pointer; }
     .select-custom:hover { background: #27272a !important; }
   `);
 

@@ -41,7 +41,7 @@ function setup() {
       color: #ffffff !important;
       border: 1px solid #27272a !important;
       border-radius: 4px !important;
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif !important;
+      font-family: "Neue Haas Unica", sans-serif !important;
       font-size: 11px !important;
       font-weight: 600 !important;
       cursor: pointer;
@@ -79,7 +79,7 @@ function setup() {
     }
   `);
 
-  textFont('-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif');
+  textFont('"Neue Haas Unica", sans-serif');
   
   // Inizializzazione audio p5.sound
   realOsc = new p5.Oscillator('sawtooth');
