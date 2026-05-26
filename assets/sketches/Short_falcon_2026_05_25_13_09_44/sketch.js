@@ -76,7 +76,6 @@ function setup() {
     }
   `);
 
-  textFont('-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif');
 
   // --- Generazione Controlli Generici ---
   sliderAmp  = makeSlider(0, 1, 0.5, 0.01, 100, 47, 160);

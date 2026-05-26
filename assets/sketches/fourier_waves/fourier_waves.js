@@ -10,14 +10,16 @@ let a2 = 0.5;
 let phi2 = 0;       
 let type2 = 'sine';
 
-// --- Tracker di stato (NUOVO: per non intasare l'audio a 60fps) ---
-let lastF1 = -1, lastA1 = -1, lastPhi1 = -1, lastType1 = '';
-let lastF2 = -1, lastA2 = -1, lastPhi2 = -1, lastType2 = '';
+// --- Tracker di stato ---
+let lastF1 = -1, lastA1 = -1, lastType1 = '';
+let lastF2 = -1, lastA2 = -1, lastType2 = '';
 
-// --- Oscillatori audio (p5.sound) ---
+// --- Oscillatori audio (p5.sound) e Analisi (FFT) ---
 let osc1, osc2;
 let playing1 = false;
 let playing2 = false;
+let fft;
+let specColor; // Gestore della transizione fluida del colore dello spettro
 
 // --- Animazione e UI ---
 let animT = 0;
@@ -39,7 +41,7 @@ function setup() {
   let containerEl = document.querySelector('.canvas-wrapper');
   isFourierPage = !!containerEl;
 
-  let canvasWidth = isFourierPage ? windowWidth - 420 : 500;
+  let canvasWidth = isFourierPage ? windowWidth - 420 : 1000;
   let canvasHeight = isFourierPage ? windowHeight : 780; 
 
   let cnv = createCanvas(canvasWidth, canvasHeight);
@@ -62,7 +64,6 @@ function setup() {
     .select-custom:hover { background: #27272a !important; }
   `);
 
-  textFont('-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif');
 
   // --- Controlli onda 1 ---
   a1Slider   = makeSlider(0, 200, 80, 1,      75, 42, 115);
@@ -102,14 +103,19 @@ function setup() {
     });
   }
 
-  // --- Oscillatori ---
+  // --- Audio ---
   userStartAudio();
   osc1 = new p5.Oscillator(); osc1.amp(0);
   osc2 = new p5.Oscillator(); osc2.amp(0);
+  
+  fft = new p5.FFT(0, 1024); 
+  
+  // Inizializza il colore dello spettro sul verde della somma
+  specColor = color(COL_SUM); 
 }
 
 function windowResized() {
-  resizeCanvas(isFourierPage ? windowWidth - 420 : 500, isFourierPage ? windowHeight : 780);
+  resizeCanvas(isFourierPage ? windowWidth - 420 : 1000, isFourierPage ? windowHeight : 780);
 }
 
 // ============================================================
@@ -127,20 +133,17 @@ function draw() {
   phi2 = phi2Slider.value(); 
   type2 = type2Select.value();
 
-  // --- LOGICA AUDIO OTTIMIZZATA ---
-  // Aggiorna i parametri dell'oscillatore SOLO se il rispettivo valore è cambiato
+  // --- LOGICA AUDIO FLUIDA E OTTIMIZZATA ---
   if (playing1) {
     if (type1 !== lastType1) { osc1.setType(type1); lastType1 = type1; }
-    if (f1 !== lastF1)       { osc1.freq(f1); lastF1 = f1; }
-    if (a1 !== lastA1)       { osc1.amp(a1 * 0.3, 0.05); lastA1 = a1; }
-    if (phi1 !== lastPhi1)   { osc1.phase(phi1 / TWO_PI); lastPhi1 = phi1; }
+    if (f1 !== lastF1)       { osc1.freq(f1, 0.04); lastF1 = f1; } 
+    if (a1 !== lastA1)       { osc1.amp(a1 * 0.22, 0.04); lastA1 = a1; } 
   }
 
   if (playing2) {
     if (type2 !== lastType2) { osc2.setType(type2); lastType2 = type2; }
-    if (f2 !== lastF2)       { osc2.freq(f2); lastF2 = f2; }
-    if (a2 !== lastA2)       { osc2.amp(a2 * 0.3, 0.05); lastA2 = a2; }
-    if (phi2 !== lastPhi2)   { osc2.phase(phi2 / TWO_PI); lastPhi2 = phi2; }
+    if (f2 !== lastF2)       { osc2.freq(f2, 0.04); lastF2 = f2; }
+    if (a2 !== lastA2)       { osc2.amp(a2 * 0.22, 0.04); lastA2 = a2; }
   }
 
   // --- Rendering UI ---
@@ -159,9 +162,15 @@ function draw() {
   drawLegendDot(160, ly, COL_W2,  'y₂(x,t)');
   drawLegendDot(290, ly, COL_SUM, 'y = y₁ + y₂');
 
-  // --- Grafico Dominio del Tempo ---
+  fill('#71717a'); textStyle(ITALIC);
+  text("Nota: Suona le onde per attivare il grafico delle frequenze", 510, ly + 2);
+  textStyle(NORMAL);
+
+  // --- Grafico Dominio del Tempo (SINISTRA) ---
   let gx = 10, gy = 210, gw = 480, gh = 500; 
   drawGrid(gx, gy, gw, gh, true);
+  
+  fill('#ffffff'); textStyle(BOLD); text("Dominio del Tempo", gx + 10, gy + 20); textStyle(NORMAL);
 
   if (!paused) animT += 0.025;
 
@@ -183,6 +192,43 @@ function draw() {
   drawWave(y1vals,  N, gx, gy, gw, gh, COL_W1,  1.5);
   drawWave(y2vals,  N, gx, gy, gw, gh, COL_W2,  1.5);
   drawWave(ysvals,  N, gx, gy, gw, gh, COL_SUM, 2.5);
+
+  // --- Grafico Dominio delle Frequenze (DESTRA) ---
+  let rx = 510, ry = 210, rw = 470, rh = 500; 
+
+  drawGrid(rx, ry, rw, rh, false);
+
+  let spectrum = fft.analyze();
+  let maxBin = 128; 
+
+  // 1. Identifica il colore TARGET teorico
+  let targetColor;
+  if (playing1 && !playing2) {
+    targetColor = color(COL_W1);  
+  } else if (playing2 && !playing1) {
+    targetColor = color(COL_W2);  
+  } else {
+    targetColor = color(COL_SUM); 
+  }
+
+  // 2. Interpola linearmente il colore corrente verso quello target (0.18 = velocità di transizione)
+  // Questo elimina lo scatto netto di 1 frame assorbendo la latenza del buffer FFT
+  specColor = lerpColor(specColor, targetColor, 0.18);
+
+  // Disegna lo Spettro con il colore interpolato
+  noStroke();
+  fill(specColor);
+  
+  let barWidth = rw / maxBin; 
+  for (let i = 0; i < maxBin; i++) {
+    let x = i * barWidth;
+    let y = map(spectrum[i], 0, 255, 0, rh - 40); 
+    rect(rx + x, ry + rh, barWidth - 0.5, -y);
+  }
+
+  fill('#ffffff'); textStyle(BOLD); 
+  text("Spettro Frequenze (FFT)", rx + 10, ry + 20); 
+  textStyle(NORMAL);
 }
 
 // ============================================================
@@ -242,20 +288,20 @@ function drawLegendDot(x, y, col, label) {
 function playWave1() {
   userStartAudio();
   if (!playing1) {
-    osc1.setType(type1); osc1.freq(f1); osc1.amp(a1 * 0.3); osc1.phase(phi1 / TWO_PI); 
+    osc1.setType(type1); osc1.freq(f1); osc1.amp(a1 * 0.22); osc1.phase(phi1 / TWO_PI); 
     osc1.start();
     playing1 = true; btnPlay1.html('■ Stop 1').addClass('active-playing');
-    lastType1 = type1; lastF1 = f1; lastA1 = a1; lastPhi1 = phi1; // Inizializza i tracker
+    lastType1 = type1; lastF1 = f1; lastA1 = a1; 
   } else stopWave1();
 }
 
 function playWave2() {
   userStartAudio();
   if (!playing2) {
-    osc2.setType(type2); osc2.freq(f2); osc2.amp(a2 * 0.3); osc2.phase(phi2 / TWO_PI); 
+    osc2.setType(type2); osc2.freq(f2); osc2.amp(a2 * 0.22); osc2.phase(phi2 / TWO_PI); 
     osc2.start();
     playing2 = true; btnPlay2.html('■ Stop 2').addClass('active-playing');
-    lastType2 = type2; lastF2 = f2; lastA2 = a2; lastPhi2 = phi2;
+    lastType2 = type2; lastF2 = f2; lastA2 = a2;
   } else stopWave2();
 }
 

@@ -9,7 +9,9 @@
 
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://use.typekit.net/czo6zai.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
 
 	<link rel="stylesheet"   href="./assets/css/main.css">
 </head>
@@ -26,7 +28,7 @@
 		<!-- --------------------------------------------------------------------- -->
 
 		<section class="filetto">
-			<h4 class="titolo-sezione">Introduzione:<br>il suono</h4>
+			<h2 class="titolo-sezione">Introduzione:<br>il suono</h2>
 			<div class="contenuto-sezione">
 				<p>
 					Il suono è la variazione della pressione in un mezzo elastico, La propagazione del suono dipende dal mezzo in cui si muove. Le molecole si muovono avanti e indietro, con movimento oscillatorio, attorno al loro punto di riposo.
@@ -40,29 +42,42 @@
 		<!-- --------------------------------------------------------------------- -->
 
 		<section class="filetto">
-			<h4 class="titolo-sezione">Caratteristiche<br>delle onde sonore</h4>
+			<h2 class="titolo-sezione">Caratteristiche<br>delle onde sonore</h2>
 			<div class="contenuto-sezione">
 				<p>
 					Le quattro forme principali delle onde sonore sono: sinusoide, triangolare, quadra e dente di sega. Ognuna di queste forme d'onda ha caratteristiche uniche che influenzano il suono prodotto.
 				</p>
-				<div class="divisore"></div>
 
 				<div class="forme-onda">
 					<div class="forma">
 						<h5>Sinusoide</h5>
-						<p>La sinusoide è la forma d'onda più semplice e rappresenta un suono puro, con una frequenza singola e senza armoniche. È caratterizzata da una curva liscia e regolare, che rappresenta un'oscillazione uniforme. I suoni sinusoidali sono spesso utilizzati come base per la sintesi del suono, poiché possono essere combinati per creare suoni più complessi.</p>
+						<p>Forma d’onda più pura, caratterizzata da oscillazioni regolari descritte con la funzione matematica del seno.
+						<br><br>
+						$$y(x) = A sin(w t + φ)$$
+					</p>
 					</div>
 					<div class="forma">
 						<h5>Triangolare</h5>
-						<p>La forma d'onda triangolare ha una curva a forma di triangolo, con una salita e una discesa lineare. Produce un suono più ricco di armoniche rispetto alla sinusoide, ma meno complesso rispetto alla dente di sega. Il suono prodotto da un'onda triangolare è spesso descritto come morbido e dolce.</p>
+						<p>Il suono percepito sale e scende in modo lineare creando una figura geometrica a forma appunto triangolare.
+						<br><br>
+						$$𝑥(𝑡)=\frac{2A}{𝜋}arcsin(sin(\frac{2𝜋t}{T}))$$
+					</p>
 					</div>
 					<div class="forma">
 						<h5>Quadra</h5>
-						<p>La forma d'onda quadra ha una curva a forma di quadrato, con una salita e una discesa istantanea. Produce un suono ricco di armoniche, con un timbro più aggressivo rispetto alla sinusoide e alla triangolare. Il suono prodotto da un'onda quadra è spesso descritto come duro e tagliente.</p>
+						<p>Varia tra due livelli estremi per periodi costanti di tempo.
+						<br><br>
+						$$𝑥(𝑡)=𝐴⋅sgn(sin(2𝜋𝑓𝑡))$$
+					</p>
 					</div>
 					<div class="forma">
 						<h5>Dente di sega</h5>
-						<p>La forma d'onda a dente di sega ha una salita rapida e una discesa lenta. Produce un suono molto ricco di armoniche, con un timbro brillante e complesso. Il suono prodotto è acuto e penetrante.</p>
+						<p>Il segnale sale (o scende) in modo lineare e poi cade improvvisamente.
+						<br><br>
+						$$𝑠(𝑡)=𝐴⋅(\frac{t}{T}-⌊\frac{t}{T}⌋)$$
+						
+					</p>
+
 					</div>
 				</div>
 
@@ -73,7 +88,6 @@
 				<p>
 					Le onde sonore, inoltre, possono avere delle caratteristiche che ne influenzano la percezione. Qui di seguito ne elenchiamo alcune:
 				</p>
-				<div class="divisore"></div>
 
 				<div class="forme-onda">
 					<div class="forma">
@@ -98,50 +112,140 @@
 		</section>
 
 		<!-- --------------------------------------------------------------------- -->
-
 		<section class="filetto">
-			<h4 class="titolo-sezione">Sintetizzatori<br>e sintesi del suono</h4>
+			<h2 class="titolo-sezione">Sintetizzatori<br>e sintesi del suono</h2>
 			<div class="contenuto-sezione">
 				<p>
-					I sintetizzatori (abbreviati synth) sono degli strumenti musicali elettronici in grado di creare dei suoni artificialmente. Queste onde elettriche generate quindi possono essere manipolate attraverso dei filtri, amplificatori ed effetti.
-					<br>I sintetizzatori sono formati da:
-					<br><br>
-					Il Teorema di Fourier lavora nella branca matematica dell’analisi armonica, ovvero lo studio della rappresentazione e delle sovrapposizioni di onde sonore. Ogni suono che sentiamo è in realtà un’onda complessa, ovvero una somma di tante onde sinusoidali con frequenze, ampiezze e tonalità diverse.
-					Il Teorema di Fourier quindi vede le onde come sovrapposizioni di altre onde e le descrive con la formula matematica y1(x,t) e y2(x,t), con sovrapposizione y(x,t)=y1(x,t)+y2(x,t).
-					Nel grafico realizzato vediamo tre onde: la verde è la somma della blu e della rossa.
+					<h3>I sintetizzatori</h3>
+					I sintetizzatori (abbreviati synth) sono degli strumenti musicali elettronici in grado<br>di creare dei suoni artificialmente. Queste onde elettriche generate quindi<br>possono essere manipolate attraverso dei filtri, amplificatori ed effetti.
+					<br><br>I sintetizzatori sono formati da:
+					<div class="contenuto-sezione">
+						<ul>
+						<li><strong>Oscillatore</strong><br>definisce la forma d’onda base. Scelta importante perché è la base che si vuole modellare</li>
+						<li><strong>Filtro</strong><br>inizio della “sottrazione” delle frequenze indesiderate.</li>
+						<li><strong>Generatore di inviluppo</strong><br>cambia il tempo delle nostre onde. Agisce sull'amplificatore del synth, cambia il volume complessivo del suono in base alla forma dell’inviluppo.I generatori di sviluppo attraversano quattro fasi: attacco, decadimento, sostegno, rilascio.</li>
+						<li><strong>LFO</strong><br>oscillatore a bassa frequenza. Creano modulazioni ripetute nel suono.</li>
+						</ul></div>
 				</p>
-				<iframe scrolling=no frameborder=0 height=800 src="./assets/sketches/fourier_waves/"></iframe>
+				<div class="divisore"></div>
+				<p>
+					<h3>La sintesi del suono</h3>
+					Esistono diversi tipi di sintesi del suono, noi analizzeremo le tre più importanti.
+					<br><br><br>
+
+						<strong>Sintesi additiva</strong>
+						<div class="contenuto-sezione">
+							<p>
+							<br>La sintesi additiva è una tecnica di sintesi sonora che crea timbriche sommando insieme singole onde. Si basa sul Teorema di Fourier il quale mostra come un’onda, per quanti complessa, possa essere scomposta in diverse onde pure. 
+							<br><br>
+							Il Teorema di Fourier lavora nella branca matematica dell’analisi armonica, ovvero lo studio della rappresentazione e delle sovrapposizioni di onde sonore. Ogni suono che sentiamo è in realtà un’onda complessa, ovvero una somma di tante onde sinusoidali con frequenze, ampiezze e tonalità diverse.
+							Il Teorema di Fourier quindi vede le onde come sovrapposizioni di altre onde e le descrive con la formula matematica y1(x,t) e y2(x,t), con sovrapposizione y(x,t)=y1(x,t)+y2(x,t).
+							Nel grafico realizzato vediamo tre onde: la verde è la somma della blu e della rossa.</div>
+				</p>
+					<iframe scrolling=no frameborder=0 height=800 src="./assets/sketches/fourier_waves/"></iframe>
+				</p>
+
+						
 				
-				<p>
-					I sintetizzatori (abbreviati synth) sono degli strumenti musicali elettronici in grado di creare dei suoni artificialmente. Queste onde elettriche generate quindi possono essere manipolate attraverso dei filtri, amplificatori ed effetti.
-					<br>I sintetizzatori sono formati da:
-					<br><br>
-					Il Teorema di Fourier lavora nella branca matematica dell’analisi armonica, ovvero lo studio della rappresentazione e delle sovrapposizioni di onde sonore. Ogni suono che sentiamo è in realtà un’onda complessa, ovvero una somma di tante onde sinusoidali con frequenze, ampiezze e tonalità diverse.
-					Il Teorema di Fourier quindi vede le onde come sovrapposizioni di altre onde e le descrive con la formula matematica y1(x,t) e y2(x,t), con sovrapposizione y(x,t)=y1(x,t)+y2(x,t).
-					Nel grafico realizzato vediamo tre onde: la verde è la somma della blu e della rossa.
+
+						<strong>Sintesi sottrattiva</strong>
+						<div class="contenuto-sezione">
+							<p>
+							<br>È la tecnica di sound design più famosa del mondo, utilizzata come base nei classici sintetizzatori analogici. Invece di costruire il suono pezzo per pezzo, parti da un suono che ha già tutto dentro e usi un filtro per tenere solo quello che ti serve.
+							<br><br><br>
+							Questo avviene in due passaggi chiave:
+							<div class="contenuto-sezione">
+								<ul>
+								<li><strong>La Sorgente</strong><br>Il sintetizzatore genera un suono di base molto grezzo, potente e ricco di frequenze (chiamate armoniche), come l'onda a dente di sega o l'onda quadra.</li>
+								<br>
+								<li><strong>Il Filtro</strong><br>Si usano dei filtri (low-pass, high-pass ecc.) per sottrarre le frequenze che non piacciono o che non servono, modellando il suono fino a ottenere il timbro finale desiderato.</li>
+								</ul>
+							</div>
+						</div>
 				</p>
-				<iframe scrolling=no frameborder=0 height=800 src="./assets/sketches/Glittery_grenadilla_copy_2026_05_25_15_53_05/"></iframe>
-				<p>
-					I sintetizzatori (abbreviati synth) sono degli strumenti musicali elettronici in grado di creare dei suoni artificialmente. Queste onde elettriche generate quindi possono essere manipolate attraverso dei filtri, amplificatori ed effetti.
-					<br>I sintetizzatori sono formati da:
-					<br><br>
-					Il Teorema di Fourier lavora nella branca matematica dell’analisi armonica, ovvero lo studio della rappresentazione e delle sovrapposizioni di onde sonore. Ogni suono che sentiamo è in realtà un’onda complessa, ovvero una somma di tante onde sinusoidali con frequenze, ampiezze e tonalità diverse.
-					Il Teorema di Fourier quindi vede le onde come sovrapposizioni di altre onde e le descrive con la formula matematica y1(x,t) e y2(x,t), con sovrapposizione y(x,t)=y1(x,t)+y2(x,t).
-					Nel grafico realizzato vediamo tre onde: la verde è la somma della blu e della rossa.
+					<iframe scrolling=no frameborder=0 height=800 src="./assets/sketches/Glittery_grenadilla_copy_2026_05_25_15_53_05/"></iframe>
 				</p>
-				<iframe scrolling=no frameborder=0 height=800 src="./assets/sketches/Sintesi Fm/"></iframe>
-			</div>
+
+						
+				
+
+						<strong>Sintesi FM</strong>
+						<div class="contenuto-sezione">
+							<p>
+							<br>La sintesi FM è l'acronimo di sintesi a modulazione di frequenza. Viene utilizzata per generare suoni complessi e ricchi (come campane, ottoni o bassi graffianti) partendo da forme d'onda molto semplici, solitamente onde sinusoidali.
+							<br><br><br>
+							Questa tecnica utilizza due elementi base, chiamati oscillatori (o operatori):
+							<div class="contenuto-sezione">
+								<ul>
+								<li><strong>Portante (Carrier)</strong><br>È l'oscillatore che produce il suono che effettivamente sentiamo. Determina la nota musicale di partenza (la frequenza base).</li>
+								<br>
+								<li><strong>Modulante (Modulator)</strong><br>È un secondo oscillatore il cui compito è "modificare" (modulare) continuamente e velocemente la frequenza (cioè la velocità di oscillazione) della Portante.</li>
+								</ul>
+							</div>
+							<br><br>
+							Come modificare il suono? Guida al grafico.
+							<br><br>
+							<div class="contenuto-sezione">
+								<ul>
+								<li><strong>Deviazione</strong><br>Quando la Modulante è spenta (ampiezza a zero), sentiamo solo il suono puro della Portante. Quando la Modulante si attiva, inizia a spingere la frequenza della Portante "su e giù". Questo scostamento continuo dalla nota originale si chiama deviazione.</li>
+								<br>
+								<li><strong>Bande Laterali</strong><br>Questo rapido movimento "su e giù" fa apparire magicamente nuove frequenze sopra e sotto quella principale, chiamate bande laterali. Sono proprio queste nuove frequenze a creare il timbro (il carattere) del suono.</li>
+								<br>
+								<li><strong>Indice di Modulazione (I)</strong><br>Rappresenta la forza del segnale modulante. Più aumenti questo valore (cioè più la Modulante spinge forte), più lo spettro del suono si riempie di bande laterali. Il suono si trasforma così da una nota pura e dolce a un timbro via via più brillante, aspro o distorto.</li>
+								</ul>
+							</div>
+						</div>
+				</p>
+					<iframe scrolling=no frameborder=0 height=600 src="./assets/sketches/Sintesi Fm/"></iframe>
+				</p>
+
 		</section>
 
 		<!-- --------------------------------------------------------------------- -->
+		
 
 		<section class="filetto">
-			<h4 class="titolo-sezione">Campionamento e quantizzazione</h4>
+			<h2 class="titolo-sezione">Campionamento e quantizzazione</h2>
 			<div class="contenuto-sezione">
 				<p>
-					xxx
+					Il suono, come sappiamo, è una variazione ciclica della pressione atmosferica. Un microfono capta questa variazione e la riproduce sotto forma di segnale elettrico. La trasformazione del segnale da analogico (continuo) a digitale (discreto) viene chiamata genericamente campionamento (in inglese: sampling ), anche se implica due operazioni ben distinte: campionamento e quantizzazione.
 
 				</p>
+
+				
+				<h3>Campionamento</h3>
+						<div class="contenuto-sezione">
+							<p>
+							<br>
+							Il campionamento è il processo che converte un segnale audio analogico (continuo) in digitale (discreto), prelevando campioni di ampiezza a intervalli di tempo regolari, basati su una specifica frequenza di campionamento.
+							Anche se l'intervallo tra un campione e l'altro potrebbe far pensare a una perdita di dati, il teorema di Nyquist dimostra il contrario: se si campiona a una frequenza pari ad almeno il doppio della banda del segnale (che per l'udito umano va da 20 Hz a 20 kHz), il suono originario può essere ricostruito perfettamente e senza perdite. L'unica reale perdita di informazione non avviene quindi nel campionamento, ma nella successiva fase di memorizzazione, chiamata quantizzazione.
+							<br><br>
+							<div class="contenuto-sezione">
+								<strong>Teorema di Nyquist</strong><br>Il teorema di Nyquist è il principio fondamentale per convertire un segnale analogico in digitale senza perdere informazioni. Decreta che per ricostruire un segnale in alta qualità, la frequenza di campionamento deve essere almeno il doppio della frequenza massima contenuta nel segnale stesso. Questa legge segue la formula:
+								<br><br>
+								$$fs​≥2⋅fmax​$$
+								<br><br>
+								L’orecchio umano percepisce le frequenze fino a 20000 Hz, quindi, secondo il teorema, per registrare un audio in alta qualità bisogna registrare minimo a 40000 Hz.
+							</div>
+						</div>
+				<div class="divisore"></div>
+				<h3>Quantizzazione</h3>
+						<div class="contenuto-sezione">
+							<p>
+							<br>
+							La quantizzazione è il processo che converte i campioni di tensione analogica in formato digitale (binario), approssimandosi necessariamente poiché non è possibile usare infinite cifre binarie.
+							<br>
+							<div class="contenuto-sezione">
+								<ul>
+									<li><strong>Come funziona</strong><br>L'intervallo delle tensioni viene suddiviso in sotto-intervalli (es. 8 intervalli codificabili con 3 bit). Ogni campione prelevato viene arrotondato e associato al punto centrale dell'intervallo in cui cade.</li>
+									<br>
+									<li><strong>PCM (Pulse Code Modulation)</strong><br>È il nome di questa modalità standard di quantizzazione, utilizzata nei file audio non compressi come .wav e .aiff. Questa approssimazione introduce inevitabilmente un errore di riproduzione nella forma d'onda.</li>
+									<br>
+									<li><strong>Il circuito di tenuta</strong><br>Poiché il circuito quantizzatore richiede tempo per convertire la tensione in bit, si utilizza un circuito di tenuta (hold) per mantenere costante il valore del campione durante l'operazione.</li>
+								</ul>
+							</div>
+						</div>
+
 				<iframe scrolling=no frameborder=0 height=700 src="./assets/sketches/Hissing_whippoorwill_copy_copy_2026_05_25_14_38_02/"></iframe>
 
 			</div>
@@ -150,52 +254,33 @@
 <!-- --------------------------------------------------------------------- -->
 
 		<section class="filetto">
-			<h4 class="titolo-sezione">Sezione 5:<br> Radianti (GIF)</h4>
+			<h2 class="titolo-sezione">Sitografia</h2>
 			<div class="contenuto-sezione">
 				<p>
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-					Maecenas quis ante sit amet neque cursus hendrerit ac sit amet nisl.
-					In cursus aliquam odio eu eleifend.
-					Ut sed auctor magna.
-					In hac habitasse platea dictumst.
-					Aliquam aliquam nisl mi.
-					Phasellus et orci elit.
-					Maecenas vehicula elit et lacus accumsan consequat.
-					Nam consectetur lacus ante.
-					Vestibulum et massa dolor.
-					Aenean condimentum blandit eros non dapibus.
-					Maecenas quam nulla, porta eu nibh in, cursus iaculis mauris.
-					Phasellus sit amet nulla eu tellus dictum cursus.
-					Sed aliquet, ipsum sit amet tempus semper, augue velit consequat mi, et gravida sem purus a quam.
+					<ul>
+						<li>Audio Sonica. (2020a, January 13). Campionamento - Introduzione all’audio digitale. Audiosonica.com; Audiosonica. https://www.audiosonica.com/it/corsoaudio-online/campionamento-introduzione-all-audio-digitale</li>
+						<li>Audio Sonica. (2020b, January 13). Quantizzazione - Introduzione all’audio digitale. Audiosonica.com; Audiosonica. https://www.audiosonica.com/it/corsoaudio-online/quantizzazione-introduzione-all-audio-digitale</li>
+						<li>Audio Sonica. (2026). Forme d’onda elementari - Analisi armonica del suono - Audiosonica. Www.audiosonica.com. https://www.audiosonica.com/it/corsoaudio-online/forme-d-onda-elementari-analisi-armonica-del-suono</li>
+						<li>Brunotts, K. (2024, May 3). Sintesi additiva: Cos’è e come funziona. Emastered.com. https://emastered.com/it/blog/additive-synthesis</li>
+						<li>Carichino, G. (2016, April 12). Hz - hertz. YouMath. https://www.youmath.it/lezioni/fisica/unita-di-misura/misure-di-frequenza/3098-hz-hertz.html</li>
+						<li>Cymatics. (2025). Sound Design Basics: FM Synthesis. Cymatics.fm. https://cymatics.fm/blogs/production/fm-synthesis?srsltid=AfmBOorYkc7ScuwxrNhczJ5S6FufvpmkCm1imVsrRwPyugsnHFqm-Ps-</li>
+						<li>Donà, N. (2020, March 31). Tipi di sintesi: wavetable, sintesi FM e altri spiegati. LANDR Blog. https://blog.landr.com/it/tipi-di-sintesi-wavetable-sintesi-fm-e-altri-spiegati/</li>
+						<li>Donà, N. (2024, May 2). Sintesi sottrattiva: impara il design del suono del sintetizzatore. LANDR Blog. https://blog.landr.com/it/sintesi-sottrattiva-impara-il-design-del-suono-del-sintetizzatore/</li>
+						<li>Marvinacustica. (2019, March 31). Caratteristiche del Suono e delle Onde Acustiche. Marvinacustica. https://marvinacustica.it/caratteristiche-del-suono-quali-sono/</li>
+						<li>Ortolani, F. (n.d.). INTRODUZIONE ALLA SINTESI DEL SUONO Fondamenti di Teoria dei Segnali *. Retrieved May 25, 2026, from https://www.ironbridge.it/francescaortolani/ASL/appunti/Appunti/L1%20-%20Fondamenti%20di%20Teoria%20dei%20Segnali.pdf</li>
+						<li>Santamaria, G. (2022, October 24). Musica e fisica: la digitalizzazione del segnale acustico. Tecnopolo Bologna CNR. https://tecnopolo.bo.cnr.it/musica-e-fisica-la-digitalizzazione-del-segnale-acustico/</li>
+						<li>Strudel. (2025). Synths. Strudel.cc. https://strudel.cc/learn/synths/</li>
+						<li>Svantek Italia. (2025, April 14). Definizione, caratteristiche e utilizzo dell’onda sonora in acustica. SVANTEK - Sound and Vibration. https://svantek.com/it/accademia/onda-sonora/</li>
+						<li>Tecchio, N. (2025, May 30). Il teorema di Fourier e l’analisi armonica. UniD Formazione. https://www.unidformazione.com/teorema-di-fourier-e-analisi-armonica/</li>
+						<li>Tombolesi, A. (2016, June 18). Teorema del campionamento di Nyquist-Shannon. AITERTC ETS. https://www.aitertc.it/web/community/wiki-tc/teorema-del-campionamento-di-nyquist-shannon/</li>
+						<li>SWikipedia. (2005, April 24). strumento musicale che appartiene alla famiglia degli elettrofoni. Wikipedia.org; Wikimedia Foundation, Inc. https://it.wikipedia.org/wiki/Sintetizzatore</li>
+					</ul>
 				</p>
 				
 			</div>
 		</section>
 
-<!-- --------------------------------------------------------------------- -->
-
-		<section class="filetto">
-			<h4 class="titolo-sezione">Sitografia</h4>
-			<div class="contenuto-sezione">
-				<ul>
-					<li>Lorem ipsum dolor sit amet, consectetur adipiscing elit</li>
-					<li>Maecenas quis ante sit amet neque cursus hendrerit ac sit amet nisl</li>
-					<li>In cursus aliquam odio eu eleifend</li>
-					<li>Ut sed auctor magna</li>
-					<li>In hac habitasse platea dictumst</li>
-					<li>Aliquam aliquam nisl mi</li>
-					<li>Phasellus et orci elit</li>
-					<li>Maecenas vehicula elit et lacus accumsan consequat</li>
-					<li>Nam consectetur lacus ante</li>
-					<li>Vestibulum et massa dolor</li>
-					<li>Aenean condimentum blandit eros non dapibus</li>
-					<li>Maecenas quam nulla, porta eu nibh in, cursus iaculis mauris</li>
-					<li>Phasellus sit amet nulla eu tellus dictum cursus</li>
-					<li>Sed aliquet, ipsum sit amet tempus semper, augue velit consequat mi, et gravida sem purus a quam</li>
-				</ul>
-
-			</div>
-		</section>
+		
 	</main>
 </body>
 </html>

@@ -7,7 +7,7 @@ body {
 	color: #f4f4f4;
 	padding: 2em;
 	margin: 0;
-	font-family: "Inter", sans-serif;
+	font-family: "Unica", sans-serif;
 	font-optical-sizing: auto;
 	font-weight: 400;
 	font-style: normal;
@@ -99,6 +99,11 @@ section {
 ul {
 	margin: 0;
 	padding: 0;
+}
+
+.contenuto-sezione li {
+	max-width: 30em;
+	line-height: 1.2;
 }
 
 /* -- breakpoint: schermi piccoli, larghezza massima 500 pixel -- */
