@@ -9,8 +9,8 @@ let sliderFreq1, sliderAmp1, sliderSpeed;
 let sliderSampleRate, sliderBits;
 
 // --- Palette Colori (Stile Lineare e Scuro) ---
-const COL_ANALOG  = '#38bdf8';   // Azzurro Ciano (Onda continua)
-const COL_DIGITAL = '#4ade80';   // Verde Smeraldo (Onda digitalizzata)
+const COL_ANALOG  = '#ffffff';   // Azzurro Ciano (Onda continua)
+const COL_DIGITAL = '#ff0095';   // Verde Smeraldo (Onda digitalizzata)
 const COL_BG      = '#050505';   // Fondo Scuro Profondo
 const COL_TEXT    = '#ffffff';
 
@@ -133,8 +133,8 @@ function draw() {
 
   // 1. Onda Analogica Continua (Sfondo)
   noFill();
-  stroke(color(56, 189, 248, 100)); // COL_ANALOG trasparente per non sovraccaricare
-  strokeWeight(2);
+  stroke(color(255)); // COL_ANALOG trasparente per non sovraccaricare
+  strokeWeight(1);
   beginShape();
   for (let x = gx; x <= gx + gw; x++) {
     let angle = (x - gx) * visualFreq - timeOffset;

@@ -23,9 +23,9 @@ let btnPlay;
 
 // --- Colori Tema (Stile Fourier Waves) ---
 const COL_BG  = '#050505';   
-const COL_W1  = '#4ade80'; // Azzurro Portante
-const COL_W2  = '#4ade80'; // Rosa Modulante
-const COL_SUM = '#4ade80'; // Verde Segnale FM
+const COL_W1  = '#ff0095'; // Azzurro Portante
+const COL_W2  = '#ff0095'; // Rosa Modulante
+const COL_SUM = '#ff0095'; // Verde Segnale FM
 const COL_TEXT = '#ffffff';
 
 function setup() {

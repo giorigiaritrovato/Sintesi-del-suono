@@ -5,21 +5,21 @@ let isPlaying = false;
 let amp = 0.5;
 let freq = 440;
 let type = 'sine';
-let t = 0; // Variabile temporale per l'animazione
+let phase = 0; // Nuova variabile per lo sfasamento statico dell'onda
 
 // --- Elementi UI ---
-let sliderAmp, sliderFreq;
+let sliderAmp, sliderFreq, sliderPhase;
 let selectType, btnPlay;
 
-// --- Configurazione Cromatico/Estetica (In linea con lo stile di riferimento) ---
-const COL_W1   = '#38bdf8';   // Azzurro Ciano
-const COL_BG   = '#050505';   // Fondo Scuro Profondo
-const COL_TEXT = '#ffffff';
+// --- Configurazione Cromatico/Estetica ---
+const COL_W1   = '#ff0095';   // Magenta
+const COL_BG     = '#050505';   // Fondo Scuro Profondo
+const COL_TEXT   = '#ffffff';
 
 // ============================================================
 function setup() {
-  // Canvas a colonna singola compatto e pulito
-  createCanvas(500, 580);
+  // Altezza del canvas aumentata a 640px per ospitare comodamente il terzo slider
+  createCanvas(500, 640);
 
   // Iniezione dinamica del foglio di stile CSS lineare e moderno
   createElement('style', `
@@ -76,14 +76,16 @@ function setup() {
     }
   `);
 
+  textFont("neue-haas-unica");
 
-  // --- Generazione Controlli Generici ---
-  sliderAmp  = makeSlider(0, 1, 0.5, 0.01, 100, 47, 160);
-  sliderFreq = makeSlider(60, 1500, 440, 1, 100, 77, 160);
+  // --- Generazione Controlli Generici (Riorganizzati spazialmente) ---
+  sliderAmp   = makeSlider(0, 1, 0.5, 0.01,   100, 45, 160);
+  sliderFreq  = makeSlider(60, 1500, 440, 1,  100, 75, 160);
+  sliderPhase = makeSlider(0, TWO_PI, 0, 0.01, 100, 105, 160); // Nuovo Slider per la Fase
 
   // --- Menu Selezione Tipo Onda ---
   selectType = createSelect().class('select-custom');
-  selectType.position(10, 107);
+  selectType.position(10, 140);
   selectType.size(130, 26);
   selectType.option('Sinusoidale', 'sine'); 
   selectType.option('Quadra', 'square'); 
@@ -92,7 +94,7 @@ function setup() {
   selectType.selected('sine');
 
   // --- Pulsante di Attivazione Audio ---
-  btnPlay = makeButton('▶ Avvia Audio', 155, 106, 115, toggleOsc);
+  btnPlay = makeButton('▶ Avvia Audio', 155, 139, 115, toggleOsc);
 
   // --- Inizializzazione Audio ---
   userStartAudio();
@@ -108,44 +110,47 @@ function draw() {
   amp = sliderAmp.value();
   freq = sliderFreq.value();
   type = selectType.value();
+  phase = sliderPhase.value();
 
   // Sincronizzazione audio in tempo reale (attenuato a 0.3 per evitare clipping)
   if (isPlaying) { 
     osc.freq(freq); 
     osc.amp(amp * 0.3, 0.05); 
     osc.setType(type); 
+    osc.phase(phase / TWO_PI); // Mappa il range 0-2PI nel range 0.0-1.0 richiesto da p5.Oscillator
   }
 
-  // Avanzamento temporale dell'animazione
-  t += 0.02;
+  // [NOTARE] Rimossa l'istruzione di incremento temporale (t += 0.02) per immobilizzare l'onda
 
   // --- Disegno Header e Etichette d'Interfaccia ---
   drawPanelHeader(10, 20, 480, COL_W1, 'Strumento di Visualizzazione Audio');
   
-  drawLabel(10, 50, 'Ampiezza');
-  drawLabel(10, 80, 'Freq (Hz)');
+  drawLabel(10, 48, 'Ampiezza');
+  drawLabel(10, 78, 'Freq (Hz)');
+  drawLabel(10, 108, 'Fase (rad)');
 
   // Valori numerici live accanto ai rispettivi slider
   fill('#a1a1aa'); noStroke(); textSize(12); textAlign(LEFT);
-  text(amp.toFixed(2), 275, 60);
-  text(freq + ' Hz',   275, 90);
+  text(amp.toFixed(2), 275, 58);
+  text(freq + ' Hz',   275, 88);
+  text(phase.toFixed(2), 275, 118);
 
   // --- Legenda ---
-  drawLegendDot(10, 155, COL_W1, 'Forma d\'onda corrente');
+  drawLegendDot(10, 190, COL_W1, 'Forma d\'onda corrente');
 
-  // --- Area del Grafico (Oscilloscopio) ---
-  let gx = 10, gy = 190, gw = 480, gh = 405;
+  // --- Area del Grafico (Oscilloscopio traslata verso il basso) ---
+  let gx = 10, gy = 220, gw = 480, gh = 400;
   drawGrid(gx, gy, gw, gh);
 
   // --- LOGICA ANTIALIASING (ZOOM ADATTIVO) ---
-  // Calcolo dei punti interni alla griglia senza effetto saturazione ad alte frequenze
   let N = 400;
   let yvals = [];
   let numCycles = map(freq, 60, 1500, 2, 7);
 
   for (let i = 0; i < N; i++) {
     let xNormalized = i / (N - 1);
-    let angle = (xNormalized * numCycles * TWO_PI) - t;
+    // Sostituito il decremento temporale con il fattore di sfasamento statico manuale (+ phase)
+    let angle = (xNormalized * numCycles * TWO_PI) + phase;
     yvals.push(evaluateWave(type, angle) * amp);
   }
 
@@ -154,7 +159,7 @@ function draw() {
 }
 
 // ============================================================
-// Generatore matematico pulito delle forme d'onda primitive
+// Generatore matematico delle forme d'onda primitive
 function evaluateWave(type, angle) {
   angle = angle % TWO_PI;
   if (angle < 0) angle += TWO_PI;
@@ -171,7 +176,7 @@ function evaluateWave(type, angle) {
 function drawWave(vals, N, gx, gy, gw, gh, col, sw) {
   stroke(col); strokeWeight(sw); noFill();
   let mid = gy + gh / 2;
-  let scale = (gh / 2) * 0.85; // Mantiene i picchi proporzionati all'interno della cornice
+  let scale = (gh / 2) * 0.85; 
   beginShape();
   for (let i = 0; i < N; i++) {
     let px = gx + map(i, 0, N - 1, 0, gw);
@@ -184,7 +189,6 @@ function drawWave(vals, N, gx, gy, gw, gh, col, sw) {
 
 function drawGrid(gx, gy, gw, gh) {
   stroke('#121214'); strokeWeight(1);
-  // Griglia tecnica fitta dello sfondo
   for (let i = gx; i < gx + gw; i += 30) {
     line(i, gy, i, gy + gh);
   }
@@ -192,11 +196,9 @@ function drawGrid(gx, gy, gw, gh) {
     line(gx, j, gx + gw, j);
   }
   
-  // Asse centrale di equilibrio/simmetria
   stroke('#27272a'); strokeWeight(1.5);
   line(gx, gy + gh/2, gx + gw, gy + gh/2);
   
-  // Contenitore esterno arrotondato
   stroke('#1f1f23'); strokeWeight(1);
   noFill(); rect(gx, gy, gw, gh, 8);
 }
@@ -204,7 +206,7 @@ function drawGrid(gx, gy, gw, gh) {
 function drawPanelHeader(x, y, w, col, label) {
   noStroke();
   fill(col);
-  rect(x, y, 4, 14, 2); // Indicatore minimale colorato
+  rect(x, y, 4, 14, 2); 
   
   fill('#ffffff'); textSize(13); textAlign(LEFT); textStyle(BOLD);
   text(label, x + 10, y + 12);

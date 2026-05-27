@@ -11,8 +11,8 @@ let phi2 = 0;
 let type2 = 'sine';
 
 // --- Tracker di stato ---
-let lastF1 = -1, lastA1 = -1, lastType1 = '';
-let lastF2 = -1, lastA2 = -1, lastType2 = '';
+let lastF1 = -1, lastA1 = -1, lastType1 = '', lastPhi1 = -1;
+let lastF2 = -1, lastA2 = -1, lastType2 = '', lastPhi2 = -1;
 
 // --- Oscillatori audio (p5.sound) e Analisi (FFT) ---
 let osc1, osc2;
@@ -22,17 +22,16 @@ let fft;
 let specColor; // Gestore della transizione fluida del colore dello spettro
 
 // --- Animazione e UI ---
-let animT = 0;
-let paused = false;
+// Rimossa la variabile animT e paused per immobilizzare l'onda
 let f1Slider, a1Slider, phi1Slider, f2Slider, a2Slider, phi2Slider; 
 let type1Select, type2Select;
-let btnPlay1, btnPlay2, btnPause;
+let btnPlay1, btnPlay2;
 let isFourierPage = false;
 
 // ---- Colori ----
-const COL_W1  = '#38bdf8';   
-const COL_W2  = '#f472b6';   
-const COL_SUM = '#4ade80';   
+const COL_W1  = '#727272';   
+const COL_W2  = '#ececec';   
+const COL_SUM = '#ff0095';   
 const COL_BG  = '#050505';   
 const COL_TEXT = '#ffffff';
 
@@ -64,6 +63,7 @@ function setup() {
     .select-custom:hover { background: #27272a !important; }
   `);
 
+  textFont("neue-haas-unica");
 
   // --- Controlli onda 1 ---
   a1Slider   = makeSlider(0, 200, 80, 1,      75, 42, 115);
@@ -138,12 +138,14 @@ function draw() {
     if (type1 !== lastType1) { osc1.setType(type1); lastType1 = type1; }
     if (f1 !== lastF1)       { osc1.freq(f1, 0.04); lastF1 = f1; } 
     if (a1 !== lastA1)       { osc1.amp(a1 * 0.22, 0.04); lastA1 = a1; } 
+    if (phi1 !== lastPhi1)   { osc1.phase(phi1 / TWO_PI); lastPhi1 = phi1; } // Sincronizzazione fase live
   }
 
   if (playing2) {
     if (type2 !== lastType2) { osc2.setType(type2); lastType2 = type2; }
     if (f2 !== lastF2)       { osc2.freq(f2, 0.04); lastF2 = f2; }
     if (a2 !== lastA2)       { osc2.amp(a2 * 0.22, 0.04); lastA2 = a2; }
+    if (phi2 !== lastPhi2)   { osc2.phase(phi2 / TWO_PI); lastPhi2 = phi2; } // Sincronizzazione fase live
   }
 
   // --- Rendering UI ---
@@ -158,8 +160,8 @@ function draw() {
   text((a2).toFixed(2), 425, 54); text(f2 + ' Hz', 425, 79); text(Math.round(degrees(phi2)) + '°', 425, 104);
 
   let ly = 180;
-  drawLegendDot(30,  ly, COL_W1,  'y₁(x,t)');
-  drawLegendDot(160, ly, COL_W2,  'y₂(x,t)');
+  drawLegendDot(30,  ly, COL_W1,  'y₁(x)');
+  drawLegendDot(160, ly, COL_W2,  'y₂(x)');
   drawLegendDot(290, ly, COL_SUM, 'y = y₁ + y₂');
 
   fill('#71717a'); textStyle(ITALIC);
@@ -172,7 +174,7 @@ function draw() {
   
   fill('#ffffff'); textStyle(BOLD); text("Dominio del Tempo", gx + 10, gy + 20); textStyle(NORMAL);
 
-  if (!paused) animT += 0.025;
+  // [NOTARE] Rimossa l'istruzione di incremento del tempo automatico per bloccare le forme d'onda
 
   let graphFreq1 = map(f1, 80, 880, 0.8, 3.5);
   let graphFreq2 = map(f2, 80, 880, 0.8, 3.5);
@@ -181,8 +183,9 @@ function draw() {
   let y1vals = [], y2vals = [], ysvals = [];
   for (let i = 0; i < N; i++) {
     let x = map(i, 0, N - 1, 0, 4 * PI);
-    let v1 = waveVal(x, animT, graphFreq1, a1, type1, phi1);
-    let v2 = waveVal(x, animT, graphFreq2, a2, type2, phi2);
+    // Rimosso il parametro temporale dalla funzione matematica
+    let v1 = waveVal(x, graphFreq1, a1, type1, phi1);
+    let v2 = waveVal(x, graphFreq2, a2, type2, phi2);
     
     y1vals.push(v1);
     y2vals.push(v2);
@@ -211,8 +214,7 @@ function draw() {
     targetColor = color(COL_SUM); 
   }
 
-  // 2. Interpola linearmente il colore corrente verso quello target (0.18 = velocità di transizione)
-  // Questo elimina lo scatto netto di 1 frame assorbendo la latenza del buffer FFT
+  // 2. Interpola linearmente il colore corrente verso quello target
   specColor = lerpColor(specColor, targetColor, 0.18);
 
   // Disegna lo Spettro con il colore interpolato
@@ -232,8 +234,9 @@ function draw() {
 }
 
 // ============================================================
-function waveVal(x, t, freq, amp, type, phi) {
-  let phase = freq * x - t + phi; 
+// Generatore matematico pulito delle forme d'onda primitive (senza fattore tempo 't')
+function waveVal(x, freq, amp, type, phi) {
+  let phase = freq * x + phi; 
   if (type === 'sine')     return amp * sin(phase);
   if (type === 'square')   return amp * (sin(phase) >= 0 ? 1 : -1);
   if (type === 'sawtooth') return amp * (2 * ((phase / TWO_PI % 1) + 1) % 1 - 1);
@@ -291,7 +294,7 @@ function playWave1() {
     osc1.setType(type1); osc1.freq(f1); osc1.amp(a1 * 0.22); osc1.phase(phi1 / TWO_PI); 
     osc1.start();
     playing1 = true; btnPlay1.html('■ Stop 1').addClass('active-playing');
-    lastType1 = type1; lastF1 = f1; lastA1 = a1; 
+    lastType1 = type1; lastF1 = f1; lastA1 = a1; lastPhi1 = phi1;
   } else stopWave1();
 }
 
@@ -301,7 +304,7 @@ function playWave2() {
     osc2.setType(type2); osc2.freq(f2); osc2.amp(a2 * 0.22); osc2.phase(phi2 / TWO_PI); 
     osc2.start();
     playing2 = true; btnPlay2.html('■ Stop 2').addClass('active-playing');
-    lastType2 = type2; lastF2 = f2; lastA2 = a2;
+    lastType2 = type2; lastF2 = f2; lastA2 = a2; lastPhi2 = phi2;
   } else stopWave2();
 }
 

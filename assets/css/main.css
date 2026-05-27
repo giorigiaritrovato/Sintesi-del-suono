@@ -20,9 +20,29 @@ p {
 	line-height: 1.2;
 }
 
+a:link {
+  color: #ffffff; /* Colore del link */
+  text-decoration: none; /* Rimuove la sottolineatura */
+  font-weight: lighter; /* Rende il testo in grassetto */
+}
+
+a:visited {
+  color: #ffffff; /* Colore dopo che l'utente ha visitato la pagina */
+}
+
+a:hover {
+  color: #000000; /* Colore al passaggio del mouse */
+}
+
+a:active {
+  color: #ffffff; /* Colore quando viene cliccato */
+}
+
+
+
 h1 {
 	margin: 0;
-	font-size: 3em;
+	font-size: 4em;
 }
 
 h4 {
@@ -39,7 +59,7 @@ iframe {
 	background: #000;
 }
 
-header,
+header-uno,
 section {
 	display: grid;
 	grid-template-columns: 1fr 4fr;
@@ -51,9 +71,26 @@ section {
 	padding-left: 0;
 	padding-right: 0;
 }
+.header-due {
+	display: grid;
+	grid-template-columns: 4fr 4fr;
+	margin-bottom: 2em;
+	padding-top: 0.25em;
+	padding-bottom: 0;
+	background: #000;
+	border: 0;
+	padding-left: 0;
+	padding-right: 0;
+}
 
 .filetto {
 	border-top: solid 1px #ffffff;
+	padding-top: 2em;
+	padding-bottom: 2em;
+}
+
+.filetto-due {
+	border-top: solid 0px #ffffff;
 	padding-top: 2em;
 	padding-bottom: 2em;
 }

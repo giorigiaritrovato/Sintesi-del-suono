@@ -13,7 +13,7 @@ let historyIndex = 0;
 let maxHistory = 50; // Per il 3D Waterfall
 
 // --- Palette Colori Stile Zinc ---
-const COL_W1   = '#38bdf8';   // Azzurro Ciano (Blob / Spettro principale)
+const COL_W1   = '#ff0095';   // Azzurro Ciano (Blob / Spettro principale)
 const COL_W2   = '#f472b6';   // Rosa Pastello (Waterfall / Forma d'onda)
 const COL_SUM  = '#4ade80';   // Verde Smeraldo
 const COL_BG   = '#050505';   // Fondo Scuro Profondo

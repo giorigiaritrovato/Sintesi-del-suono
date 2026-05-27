@@ -3,18 +3,19 @@ let synthAmp = 0.8;
 let synthFreq = 220;
 let harmonicsNum = 4;
 let synthType = 'square';
+let synthPhase = 0; // Nuova variabile per la fase
 
 // Tracker di stato per modifiche real-time stabili
-let lastSynthFreq = -1, lastSynthAmp = -1, lastHarmonicsNum = -1, lastSynthType = '';
+let lastSynthFreq = -1, lastSynthAmp = -1, lastHarmonicsNum = -1, lastSynthType = '', lastSynthPhase = -1;
 
 // Web Audio nativo
 let synthOsc = null;  
 let synthGain = null; 
 let playingSynth = false;
 
-let animT = 0;
-let synthAmpSlider, synthFreqSlider, harmonicsSlider, synthTypeSelect, btnPlaySynth;
-const COL_SYNTH  = '#a855f7';   // Viola
+// UI Elements
+let synthAmpSlider, synthFreqSlider, harmonicsSlider, synthPhaseSlider, synthTypeSelect, btnPlaySynth;
+const COL_SYNTH  = '#ff0095';   // Viola
 const COL_BG     = '#050505';   
 
 function setup() {
@@ -32,52 +33,60 @@ function setup() {
 
   textFont("neue-haas-unica");
 
-  // Interfaccia di controllo posizionata a sinistra del pannello dedicato
-  synthAmpSlider  = makeSlider(0, 200, 80, 1,     85, 42, 115);
-  synthFreqSlider = makeSlider(80, 880, 220, 1,   85, 67, 115);
-  harmonicsSlider = makeSlider(1, 32, 4, 1,       85, 92, 115);
+  // Interfaccia di controllo (distribuita per fare spazio alla fase)
+  synthAmpSlider   = makeSlider(0, 200, 80, 1,     85, 42, 115);
+  synthFreqSlider  = makeSlider(80, 880, 220, 1,   85, 67, 115);
+  harmonicsSlider  = makeSlider(1, 32, 4, 1,       85, 92, 115);
+  synthPhaseSlider = makeSlider(0, TWO_PI, 0, 0.01, 85, 117, 115); // Slider Fase da 0 a 2PI
 
   synthTypeSelect = createSelect().class('select-custom');
-  synthTypeSelect.position(10, 125); synthTypeSelect.size(120, 24);
+  synthTypeSelect.position(10, 150); synthTypeSelect.size(120, 24);
   synthTypeSelect.option('Onda Quadra', 'square');
   synthTypeSelect.option('Onda Dente Sega', 'sawtooth');
   synthTypeSelect.option('Onda Triangolare', 'triangle');
   synthTypeSelect.selected('square');
 
-  btnPlaySynth = makeButton('▶ Suona Sintesi', 145, 125, 125, playWaveSynth);
+  btnPlaySynth = makeButton('▶ Suona Sintesi', 145, 150, 125, playWaveSynth);
 }
 
 function draw() {
   background(COL_BG);
 
+  // Lettura dei parametri dagli slider
   synthAmp = synthAmpSlider.value() / 100;
   synthFreq = synthFreqSlider.value();
   harmonicsNum = harmonicsSlider.value();
   synthType = synthTypeSelect.value();
+  synthPhase = synthPhaseSlider.value();
 
   // Controllo variazioni ed esecuzione thread audio dedicati
   if (playingSynth) {
     let ctx = getAudioContext();
     if (synthFreq !== lastSynthFreq) { synthOsc.frequency.setValueAtTime(synthFreq, ctx.currentTime); lastSynthFreq = synthFreq; }
     if (synthAmp !== lastSynthAmp)   { synthGain.gain.setValueAtTime(synthAmp * 0.25, ctx.currentTime); lastSynthAmp = synthAmp; }
-    if (harmonicsNum !== lastHarmonicsNum || synthType !== lastSynthType) {
+    if (harmonicsNum !== lastHarmonicsNum || synthType !== lastSynthType || synthPhase !== lastSynthPhase) {
       updateSynthWave();
-      lastHarmonicsNum = harmonicsNum; lastSynthType = synthType;
+      lastHarmonicsNum = harmonicsNum; lastSynthType = synthType; lastSynthPhase = synthPhase;
     }
   }
 
   // Costruzione della grafica
   drawPanelHeader(10, 20, 460, COL_SYNTH, `Serie di Fourier — Approssimazione (${harmonicsNum} Armon.)`);
-  drawLabel(10, 42, 'Ampiezza'); drawLabel(10, 67, 'Freq (Hz)'); drawLabel(10, 92, 'N. Armoniche');
+  drawLabel(10, 42, 'Ampiezza'); 
+  drawLabel(10, 67, 'Freq (Hz)'); 
+  drawLabel(10, 92, 'N. Armoniche');
+  drawLabel(10, 117, 'Fase (rad)');
   
   fill('#a1a1aa'); noStroke(); textSize(12); textAlign(LEFT);
-  text((synthAmp).toFixed(2), 210, 54); text(synthFreq + ' Hz', 210, 79); text(harmonicsNum, 210, 104);
-  drawLegendDot(10, 180, COL_SYNTH, 'Onda Risultante (Somma Armonica)');
+  text((synthAmp).toFixed(2), 210, 54); 
+  text(synthFreq + ' Hz', 210, 79); 
+  text(harmonicsNum, 210, 104);
+  text(synthPhase.toFixed(2), 210, 129);
 
-  let gx = 10, gy = 210, gw = 480, gh = 500;
+  drawLegendDot(10, 200, COL_SYNTH, 'Onda Risultante (Somma Armonica)');
+
+  let gx = 10, gy = 230, gw = 480, gh = 500;
   drawGrid(gx, gy, gw, gh, true);
-
-  animT += 0.025;
 
   // Matematica discreta di Fourier per la simulazione grafica dello spettro
   let graphSynthFreq = map(synthFreq, 80, 880, 0.8, 3.5);
@@ -86,7 +95,8 @@ function draw() {
 
   for (let i = 0; i < N; i++) {
     let x = map(i, 0, N - 1, 0, 4 * PI);
-    let phase = graphSynthFreq * x - animT;
+    // Sostituito '- animT' con '+ synthPhase' per rendere l'onda statica ma sfasabile
+    let phase = graphSynthFreq * x + synthPhase; 
     let totalY = 0;
 
     if (synthType === 'square') {
@@ -119,12 +129,31 @@ function updateSynthWave() {
   let real = new Float32Array(maxIdx + 1);
   let imag = new Float32Array(maxIdx + 1);
   
+  let phi = synthPhaseSlider.value();
+  
+  // Scomposizione in componenti reali (coseno) e immaginarie (seno) basate sulla fase phi
   if (synthType === 'square') {
-    for (let k = 0; k < harmonicsNum; k++) { let n = 2 * k + 1; imag[n] = 4 / (Math.PI * n); }
+    for (let k = 0; k < harmonicsNum; k++) { 
+      let n = 2 * k + 1; 
+      let An = 4 / (Math.PI * n);
+      real[n] = An * Math.sin(n * phi);
+      imag[n] = An * Math.cos(n * phi);
+    }
   } else if (synthType === 'sawtooth') {
-    for (let n = 1; n <= harmonicsNum; n++) { let sign = (n % 2 === 0) ? -1 : 1; imag[n] = 2 / (Math.PI * n) * sign; }
+    for (let n = 1; n <= harmonicsNum; n++) { 
+      let sign = (n % 2 === 0) ? -1 : 1; 
+      let An = 2 / (Math.PI * n) * sign;
+      real[n] = An * Math.sin(n * phi);
+      imag[n] = An * Math.cos(n * phi);
+    }
   } else if (synthType === 'triangle') {
-    for (let k = 0; k < harmonicsNum; k++) { let n = 2 * k + 1; let sign = (k % 2 === 0) ? 1 : -1; imag[n] = (8 / (Math.PI * Math.PI)) * (sign / (n * n)); }
+    for (let k = 0; k < harmonicsNum; k++) { 
+      let n = 2 * k + 1; 
+      let sign = (k % 2 === 0) ? 1 : -1; 
+      let An = (8 / (Math.PI * Math.PI)) * (sign / (n * n));
+      real[n] = An * Math.sin(n * phi);
+      imag[n] = An * Math.cos(n * phi);
+    }
   }
   
   let pWave = ctx.createPeriodicWave(real, imag, {disableNormalization: false});
